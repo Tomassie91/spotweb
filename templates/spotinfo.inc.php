@@ -12,15 +12,12 @@
 ?>
 
 <?php
-	# Function from http://www.php.net/manual/en/function.filesize.php#99333
-	function format_size($size) {
-		  $sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
-		  if ($size == 0) { return('n/a'); } else {
-		  return (round($size/pow(1024, ($i = floor(log($size, 1024)))), $i > 1 ? 2 : 0) . $sizes[$i]); }
-	} # format_size
-	
 	# fix up the category number
 	$hcat = ((int) $spot['category']);
+
+	# fix the sabnzbdurl en searchurl
+	$spot['sabnzbdurl'] = $tplHelper->makeSabnzbdUrl($spot);
+	$spot['searchurl'] = $tplHelper->makeSearchUrl($spot);
 	
 	# and display the image and website
 	if (!empty($spot['website'])) {
@@ -41,18 +38,7 @@
 	} # if
 
 	# and fixup the description text
-	$tmp = $spot['description'];
-	
-	$tmp = str_ireplace('[b]', '<b>', $tmp);
-	$tmp = str_ireplace('[/b]', '</b>', $tmp);
-	$tmp = str_ireplace('[i]', '<i>', $tmp);
-	$tmp = str_ireplace('[/i]', '</i>', $tmp);
-	$tmp = str_ireplace('[br]', "<br>", $tmp);
-	$tmp = str_ireplace('[u]', '<u>', $tmp);
-	$tmp = str_ireplace('[/u]', '</u>', $tmp);
-	$tmp = str_ireplace('&lt;br&gt;', '<br>', $tmp);
-	$tmp = str_ireplace('&lt;br /&gt;', '<br>', $tmp);
-	$tmp = str_ireplace('&amp;lt;br />', '<br>', $tmp);
+	$tmp = $tplHelper->formatDescription($spot['description']);
 	echo "<pre>$tmp</pre>";
 ?>
 	
@@ -69,7 +55,7 @@
 		} # foreach
 	} # if
 ?>	
-					<tr> <th> Omvang </th> <td> <?php echo format_size($spot['size']); ?> </td> </tr>
+					<tr> <th> Omvang </th> <td> <?php echo $tplHelper->format_size($spot['size']); ?> </td> </tr>
 	
 					<tr> <td colspan="2"> &nbsp;  </td> </tr>
 		

@@ -13,9 +13,22 @@
 		<!-- dynatree iteslf -->
 		<script src='js/dynatree/jquery.dynatree.min.js' type='text/javascript'></script>
 
+		<!-- loading the fancybox -->
+		<script type="text/javascript" src="js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+
 		<!-- Add code to initialize the tree when the document is loaded: -->
 		<script type='text/javascript'>
 		$(function(){
+			 $("a.spot").fancybox({
+				'width'				: '80%',
+				'height'			: '60%',
+				'autoScale'			: false,
+				'transitionIn'		: 'none',
+				'transitionOut'		: 'none',
+				'type'				: 'iframe'
+			});
+
 			// Attach the dynatree widget to an existing <div id="tree"> element
 			// and pass the tree options as an argument to the dynatree() function:
 			$("#tree").dynatree({

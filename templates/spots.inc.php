@@ -32,7 +32,7 @@
 		echo "<tr class='" . ($count % 2 ? "even" : "odd") . "' >" . 
 			 "<td>" . SpotCategories::Cat2Desc($spot['category'], $spot['subcata']) . "</td>" .
 			 "<td>" . SpotCategories::HeadCat2Desc($spot['category']) . "</td>" .
-			 "<td><a href='?page=getspot&amp;messageid=" . $spot['messageid'] . "'>" . $spot['title'] . "</a></td>" .
+			 "<td><a class='spot' href='?page=getspot&amp;messageid=" . $spot['messageid'] . "'>" . $spot['title'] . "</a></td>" .
 			 "<td>" . SpotCategories::Cat2Desc($spot['category'], $spot['subcat' . SpotCategories::SubcatNumberFromHeadcat($spot['category'])]) . "</td>" .
 			 "<td>" . $spot['poster'] . "</td>" .
 			 "<td>" . strftime("%a, %d-%b-%Y (%H:%M)", $spot['stamp']) . "</td>";

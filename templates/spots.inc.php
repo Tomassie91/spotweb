@@ -1,6 +1,7 @@
 <?php
 	# Converteer filter parameters naar queries
 	$getUrl = '';
+
 	foreach($activefilter as $val => $key) {
 		$getUrl .= '&amp;search[' .  $val . ']=' . urlencode($key);
 	} # foreach
@@ -48,6 +49,7 @@
 			if (!empty($spot['sabnzbdurl'])) {
 				echo "<td><a target='_blank' href='" . $spot['sabnzbdurl'] . "' ><img height='16 widt='16'  class='sabnzbd-button' src='images/download-small.png'></a></td>";
 			} # if
+			
 		} else {
 			if ($settings['show_nzbbutton']) {
 				echo "<td> &nbsp; </td>";

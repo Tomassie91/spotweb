@@ -34,7 +34,6 @@
 					<h4>Filters</h4>
 					
 					<ul class="filterlist">
-					<a class="filter " href="?search[tree]="><img src="images/none.png">Geen filters</a>
 <?php
 	foreach($filters as $filter) {
 ?>

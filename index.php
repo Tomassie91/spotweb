@@ -14,6 +14,7 @@ function initialize() {
 	# we define some preferences, later these could be
 	# user specific or stored in a cookie or something
 	$prefs = array('perpage' => 100);
+
 	if (isset($settings['prefs'])) {
 		$prefs = array_merge($prefs, $settings['prefs']);
 	} # if

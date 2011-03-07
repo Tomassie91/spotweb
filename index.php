@@ -1,6 +1,18 @@
 <?php
 error_reporting(E_ALL & ~8192 & ~E_USER_WARNING);	# 8192 == E_DEPRECATED maar PHP < 5.3 heeft die niet
 
+#settings
+require_once "settings.php";
+$settings = $GLOBALS['settings'];
+
+#install script
+if(!isset($GLOBALS['settings']['is_installed']) || $GLOBALS['settings']['is_installed'] == false){
+	require_once('lib/page/SpotPage_install.php');
+	$page = new SpotPage_install();
+	$page->render();
+	exit;
+}
+
 require_once "lib/SpotDb.php";
 require_once "lib/SpotReq.php";
 require_once "lib/SpotParser.php";
@@ -26,9 +38,6 @@ function openDb($dbSettings) {
 } # openDb
 
 function initialize() {
-	require_once "settings.php";
-	$settings = $GLOBALS['settings'];
-
 	# we define some preferences, later these could be
 	# user specific or stored in a cookie or something
 	$prefs = array('perpage' => 100);
@@ -49,6 +58,7 @@ function initialize() {
 	
 	# and put them in an encompassing site object
 	$GLOBALS['site']['req'] = $req;
+	$settings = $GLOBALS['settings'];
 	$GLOBALS['site']['settings'] = $settings;
 	$GLOBALS['site']['prefs'] = $prefs;
 	$GLOBALS['site']['pagetitle'] = 'SpotWeb - ';
@@ -58,8 +68,9 @@ function initialize() {
 #- main() -#
 try {
 	initialize();
+
 	extract($GLOBALS['site'], EXTR_REFS);
-	
+
 	switch($site['page']) {
 		case 'getspot' : {
 				$page = new SpotPage_getspot($db, $settings, $prefs, $req->getDef('messageid', ''));

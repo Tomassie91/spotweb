@@ -38,7 +38,7 @@ if(file_exists('./settings.xml'))
 else if(file_exists('../settings.xml'))
 	$settingsobject = simplexml_load_file('../settings.xml');
 else
-	die('settings.xml not found, have you ran the installation file?');
+	$GLOBALS['settings']['is_installed'] = false;
 
 #-------------------
 # converting the SimpleXML Object to an array
@@ -48,12 +48,15 @@ $settings = simplexml2array($settingsobject);
 #-------------------
 #defining the version
 #-------------------
-define('VERSION', $settings['version']);
+if(isset($settings['version']))
+	define('VERSION', $settings['version']);
 
 #-------------------
 # adding elements to the settings array that don't need configuring
 # ------------------
 $settings['index_filter'] = array();
+
+$settings['retrieve_increment'] = 1000;
 
 $settings['hdr_group'] = 'free.pt';
 $settings['nzb_group'] = 'alt.binaries.ftd';
@@ -67,7 +70,7 @@ $settings['sabnzbd']['url'] = 'http://$SABNZBDHOST/sabnzbd/api?mode=addurl&amp;n
 #------------------
 # checking porn filter
 #------------------
-if($settings['hide_porn'] == true) {
+if(isset($settings['hide_porn']) && $settings['hide_porn'] == true) {
 	$settings['index_filter'] = array('cat' => array('0' => array('a!d23', 'a!d24', 'a!d25', 'a!d26')));
 }
 
@@ -146,7 +149,7 @@ if (empty($settings['nntp_hdr']['host'])) {
 #----------------
 # DEBUG: print all settings values
 #----------------
-
+/**
 echo '
 SETTINGS:
 ----------------
@@ -155,4 +158,4 @@ print_r($settings);
 echo '
 ----------------
 ';
-
+**/

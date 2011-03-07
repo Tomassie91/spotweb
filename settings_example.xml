@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <version>0.3a</version>
+    <is_installed>true</is_installed>
+    <nntp_nzb>
+        <host>news.ziggo.nl</host>
+        <user>xx</user>
+        <pass>yy</pass>
+        <enc>false</enc>
+        <port>119</port>
+    </nntp_nzb>
+    <db>
+        <engine>sqlite3</engine>
+        <host>localhost</host>
+        <dbname>spotweb</dbname>
+        <user>spotweb</user>
+        <pass>spotweb</pass>
+    </db>
+    <tpl_path>./templates</tpl_path>
+    <show_updatebutton>false</show_updatebutton>
+    <show_nzbbutton>false</show_nzbbutton>
+    <hide_porn>false</hide_porn>
+    <search_url>http://www.binsearch.info/q=$SPOTFNAME</search_url>
+</settings>

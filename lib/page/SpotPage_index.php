@@ -25,25 +25,33 @@ class SpotPage_index extends SpotPage_Abs {
 		} else {
 			$prevPage = max($pageNr - 1, 0);
 		} # else
-		
+
 		# laad de spots
-		$spotsTmp = $spotsOverview->loadSpots($pageNr, $this->_prefs['perpage'], $filter);
+		$spotsTmp = $spotsOverview->loadSpots($pageNr, $this->_prefs['perpage'], $filter, 
+							array('field' => $this->_params['sortby'], 
+								  'direction' => $this->_params['sortdir']));
 
 		# als er geen volgende pagina is, ook niet tonen
 		if (!$spotsTmp['hasmore']) {
 			$nextPage = -1;
 		} # if
 		
+		# query wanneer de laatste keer de spots geupdate werden
+		$lastUpdateTime = $this->_db->getLastUpdate($this->_settings['nntp_hdr']['host']);
+
 		# zet de page title
 		$this->_pageTitle = "overzicht";
 		
 		#- display stuff -#
 		$this->template('header');
 		$this->template('filters', array('search' => $this->_params['search'],
-								  'filters' => $this->_settings['filters']));
+								  'lastupdate' => $lastUpdateTime,
+								  'filters' => $this->_settings['filters'],
+  								  'activefilter' => $this->_params['search']));
 		$this->template('spots', array('spots' => $spotsTmp['list'],
 		                        'nextPage' => $nextPage,
 								'prevPage' => $prevPage,
+								'lastupdate' => $lastUpdateTime,
 								'activefilter' => $this->_params['search']));
 		$this->template('footer');
 	} # render()

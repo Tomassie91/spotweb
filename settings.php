@@ -58,6 +58,8 @@ $settings['index_filter'] = array();
 
 $settings['retrieve_increment'] = 1000;
 
+$settings['prefs']['perpage'] = 100;
+
 $settings['hdr_group'] = 'free.pt';
 $settings['nzb_group'] = 'alt.binaries.ftd';
 $settings['comment_group'] = 'free.usenet';
@@ -85,26 +87,47 @@ $settings['rsa_keys'][3] = array('modulo' => 'uiyChPV23eguLAJNttC/o0nAsxXgdjtvUv
 $settings['rsa_keys'][4] = array('modulo' => '1k6RNDVD6yBYWR6kHmwzmSud7JkNV4SMigBrs+jFgOK5Ldzwl17mKXJhl+su/GR9',
 								 'exponent' => 'AQAB');
 #-----------------
-# adding filters TO-DO: allow custom filters
+# adding spotnet filters
 #-----------------
-$settings['filters'] = array(
-        Array("Films (geen erotiek)", "images/video2.png", "cat0_d,!cat0_d11,!cat0_d23,!cat0_d24,!cat0_d25,!cat0_d26,!cat0_a5", "", array()),
-        Array("Series", "images/series2.png", "cat0_d11", "", array()),
-        Array("Boeken", "images/books2.png", "cat0_a5", "", array()),
-        Array("Muziek", "images/audio2.png", "cat1", "",
-                Array(
-                        Array("Compressed", "images/audio2.png", "cat1_a0,cat1_a3,cat1_a5,cat1_a6", ""),
-                        Array("Lossless", "images/audio2.png", "cat1_a2,cat1_a4,cat1_a7,cat1_a8", "")
-                )
-        ),
-        Array("Spellen", "images/games2.png", "cat2", "", array()),
-        Array("Applicaties", "images/applications2.png", "cat3", "", array()),
-        Array("Erotiek", "images/x2.png", "cat0_d23,cat0_d24,cat0_d25,cat0_d26", "", array()),
-        Array("Reset filters", "images/custom2.png", "", "", array())
-
-        # Uncomment onderstaande als voorbeeld van een custom filter
-        # ,Array("Lossless MJ", "images/audio2.png", "cat1_a2,cat1_a4,cat1_a7,cat1_a8&search[type]=Titel&search[text]=Michael+Jackson", "", array())
+$settings['filters'] = array(    
+    Array("Reset filters", "images/icons/home.png", "", "", array()),
+    Array("Beeld", "images/icons/film.png", "cat0_d,!cat0_d11,!cat0_d23,!cat0_d24,!cat0_d25,!cat0_d26,!cat0_a5", "", 
+        Array(
+            Array("DivX", "images/icons/divx.png", "cat0_a0", ""),
+            Array("WMV", "images/icons/wmv.png", "cat0_a1", ""),
+            Array("MPEG", "images/icons/mpg.png", "cat0_a2", ""),
+            Array("DVD", "images/icons/film.png", "cat0_a3,cat0_a10", ""),
+            Array("HD", "images/icons/hd.png", "cat0_a4,cat0_a6,cat0_a7,cat0_a8,cat0_a9", ""),
+            Array("Series", "images/icons/tv.png", "cat0_d11", ""),
+            Array("Boeken", "images/icons/book.png", "cat0_a5", ""),
+            Array("Erotiek", "images/icons/female.png", "cat0_d23,cat0_d24,cat0_d25,cat0_d26", "")
+        )
+    ),    
+    Array("Muziek", "images/icons/music.png", "cat1_a", "", 
+        Array(
+            Array("Compressed", "images/icons/music.png", "cat1_a0,cat1_a3,cat1_a5,cat1_a6", ""),
+            Array("Lossless", "images/icons/music.png", "cat1_a2,cat1_a4,cat1_a7,cat1_a8", "")
+        )
+    ),
+    Array("Spellen", "images/icons/controller.png", "cat2_a", "", 
+        Array(
+            Array("Windows", "images/icons/windows.png", "cat2_a0", ""),
+            Array("Mac / Linux", "images/icons/linux.png", "cat2_a1,cat2_a2", ""),
+            Array("Playstation", "images/icons/playstation.png", "cat2_a3,cat2_a4,cat2_a5,cat2_a12", ""),
+            Array("XBox", "images/icons/xbox.png", "cat2_a6,cat2_a7", ""),
+            Array("Nintendo", "images/icons/nintendo_ds.png", "cat2_a9,cat2_a10,cat2_a11", ""),
+            Array("PDA", "images/icons/phone.png", "cat2_a13", "")
+        )
+    ),
+    Array("Applicaties", "images/icons/application.png", "cat3_a", "", 
+        Array(
+            Array("Windows", "images/icons/vista.png", "cat3_a0", ""),
+            Array("Mac / Linux / OS2", "images/icons/linux.png", "cat3_a1,cat3_a2,cat3_a3", ""),
+            Array("PDA / Navigatie", "images/icons/phone.png", "cat3_a4,cat3_a5,cat3_a6,cat3_a7", "")
+        )
+    )
 );
+
 
 #-----------------
 # adding SABnzbd+ filters TO-DO: allow custom SABnzbd+ filters

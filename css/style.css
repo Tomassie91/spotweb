@@ -138,8 +138,8 @@ button,
 	border-bottom-left-radius:      8px;
 }
 
-.updatebox,
-ul.updatebox li a {
+.maintenancebox,
+ul.maintenancebox li a {
 	color: black;
 	text-align: center;
 	background-color: white;
@@ -147,6 +147,11 @@ ul.updatebox li a {
 
 .spotscontainer {
 	padding-right: 6px;
+}
+
+table.spots th a {
+	color: white;
+	text-decoration: none;
 }
 
 a.filter {

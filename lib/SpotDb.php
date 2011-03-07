@@ -31,7 +31,7 @@ class SpotDb
 												$this->_dbsettings['dbname']); 
 							  break;
 							  
-		    default			: throw new Exception("Unknown DB engine specified, please choose either sqlite3 or mysql");
+		    default			: throw new Exception('Unknown DB engine specified, please choose either sqlite3 or mysql');
 		} # switch
 		
 		$this->_conn->connect();
@@ -87,6 +87,20 @@ class SpotDb
 			$this->_conn->exec("INSERT INTO nntp(server, nowrunning) VALUES('%s', '%s')", Array($server, (int) $runTime));
 		} # if
 	} # setRetrieverRunning
+
+	/*
+	 * Zet de tijd/datum wanneer retrieve voor het laatst geupdate heeft
+	 */
+	function setLastUpdate($server) {
+		return $this->_conn->exec("UPDATE nntp SET lastrun = '%d' WHERE server = '%s'", Array(time(), $server));
+	} # getLastUpdate
+
+	/*
+	 * Geef de datum van de laatste update terug
+	 */
+	function getLastUpdate($server) {
+		return $this->_conn->singleQuery("SELECT lastrun FROM nntp WHERE server = '%s'", Array($server));
+	} # getLastUpdate
 	
 	/**
 	 * Geef het aantal spots terug dat er op dit moment in de db zit
@@ -105,14 +119,15 @@ class SpotDb
 	 * Geef alle spots terug in de database die aan $sqlFilter voldoen.
 	 * 
 	 */
-	function getSpots($pageNr, $limit, $sqlFilter) {
+	function getSpots($pageNr, $limit, $sqlFilter, $sort) {
 		$results = array();
 		$offset = (int) $pageNr * (int) $limit;
 
 		if (!empty($sqlFilter)) {
 			$sqlFilter = ' WHERE ' . $sqlFilter;
 		} # if
- 		return $this->_conn->arrayQuery("SELECT * FROM spots " . $sqlFilter . " ORDER BY stamp DESC LIMIT " . (int) $limit ." OFFSET " . (int) $offset);
+
+ 		return $this->_conn->arrayQuery("SELECT * FROM spots " . $sqlFilter . " ORDER BY " . $sort['field'] . " " . $sort['direction'] . " LIMIT " . (int) $limit ." OFFSET " . (int) $offset);
 	} # getSpots()
 
 	/*
@@ -142,6 +157,36 @@ class SpotDb
 	} # getCommentRef
 
 	/*
+	 * Voeg een spot toe aan de lijst van gedownloade files
+	 */
+	function addDownload($messageid) {
+		$this->_conn->exec("INSERT INTO downloadlist(messageid, stamp) VALUES('%s', '%d')",
+								Array($messageid, time()));
+	} # addDownload
+
+	/*
+	 * Is een messageid al gedownload?
+	 */
+	function hasBeenDownload($messageid) {
+		$artId = $this->_conn->singleQuery("SELECT stamp FROM downloadlist WHERE messageid = '%s'", Array($messageid));
+		return (!empty($artId));
+	} # hasBeenDownload
+
+	/*
+	 * Geef een lijst terug van alle downloads
+	 */
+	function getDownloads() {
+		return $this->_conn->arrayQuery("SELECT s.title AS title, dl.stamp AS stamp, dl.messageid AS messageid FROM downloadlist dl, spots s WHERE dl.messageid = s.messageid");
+	} # getDownloads
+
+	/*
+	 * Wis de lijst met downloads
+	 */
+	function emptyDownloadList() {
+		return $this->_conn->exec("TRUNCATE TABLE downloadlist;");
+	} # emptyDownloadList()
+	
+	/*
 	 * Voeg een spot toe aan de database
 	 */
 	function addSpot($spot) {
@@ -162,7 +207,6 @@ class SpotDb
 					   $spot['Stamp']));
 	} # addSpot()
 
-	
 	
 	function beginTransaction() {
 		$this->_conn->exec('BEGIN;');

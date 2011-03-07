@@ -12,8 +12,20 @@ class SpotsOverview {
 	 * $sqlfilter is een kant en klaar SQL statement waarmee de spotweb
 	 * filter ingesteld wordt;
 	 */
-	function loadSpots($start, $limit, $sqlFilter) {
-		$spotList = $this->_db->getSpots($start, $limit + 1, $sqlFilter);
+	function loadSpots($start, $limit, $sqlFilter, $sort) {
+		# welke manier willen we sorteren?
+		$sortFields = array('category', 'poster', 'title', 'stamp', 'subcata');
+		if (array_search($sort['field'], $sortFields) === false) {
+			$sort['field'] = 'stamp';
+			$sort['direction'] = 'DESC';
+		} else {
+			if ($sort['direction'] != 'DESC') {
+				$sort['direction'] = 'ASC';
+			} # if
+		} # else
+
+		# en haal de daadwerkelijke spotrs op
+		$spotList = $this->_db->getSpots($start, $limit + 1, $sqlFilter, $sort);
 		$spotCnt = count($spotList);
 
 		# we vragen altijd 1 spot meer dan gevraagd, als die dan mee komt weten 
@@ -39,7 +51,7 @@ class SpotsOverview {
 	 * Converteer een array met search termen (tree, type en text) naar een SQL
 	 * statement dat achter een WHERE geplakt kan worden.
 	 */
-	function filterToQuery($search) {
+	function filterToQuery(&$search) {
 		$filterList = array();
 		$dyn2search = array();
 
@@ -48,11 +60,17 @@ class SpotsOverview {
 			return '';
 		} # if
 		
+		# als er gevraagd om de filters te vergeten (en enkel op het woord te zoeken)
+		# resetten we gewoon de boom
+		if ((isset($search['unfiltered'])) && (($search['unfiltered'] === 'true'))) {
+			$search['tree'] = '';
+		} # if
+
 		# convert the dynatree list to a list 
 		if (!empty($search['tree'])) {
 			# explode the dynaList
 			$dynaList = explode(',', $search['tree']);
-
+			
 			# fix de tree variable zodat we dezelfde parameters ondersteunen als de JS
 			$newTreeQuery = '';
 			for($i = 0; $i < count($dynaList); $i++) {
@@ -70,7 +88,7 @@ class SpotsOverview {
 					} else {
 						$subCatSelected = '*';
 					} # else
-					
+
 					#
 					# creeer een string die alle subcategories bevat
 					#
@@ -95,7 +113,7 @@ class SpotsOverview {
 					$newTreeQuery .= "," . $dynaList[$i];
 				} # else
 			} # foreach
-			
+
 			# explode the dynaList
 			$search['tree'] = $newTreeQuery;
 			$dynaList = explode(',', $search['tree']);

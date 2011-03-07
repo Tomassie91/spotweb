@@ -5,7 +5,7 @@
 
 					<form id="filterform" action="">
 <?php
-	$search = array_merge(array('type' => 'Titel', 'text' => '', 'tree' => ''), $search);
+	$search = array_merge(array('type' => 'Titel', 'text' => '', 'tree' => '', 'unfiltered' => ''), $search);
 ?>
 					<input type="hidden" id="search-tree" name="search[tree]" value="<?php echo $search['tree']; ?>"></input>
 						<table class="filters">
@@ -17,6 +17,10 @@
 						
 						<tr>
 							<td colspan="3"><input class='searchbox' type="text" name="search[text]" value="<?php echo htmlspecialchars($search['text']); ?>"></input></td>
+						</tr>
+
+						<tr> 
+							<td colspan='3'> <input type="checkbox" name="search[unfiltered]" value="true"  <?php echo $search['unfiltered'] == "true" ? 'checked="checked"' : "" ?>>Vergeet filters voor zoekopdracht</input> </td>
 						</tr>
 						</table>
 					
@@ -52,16 +56,19 @@
 ?>
 					</ul>
 				</div>
+				<div class="filter shadow">
+					<h4>Maintenance</h4>
+					<ul class="filterlist maintenancebox">
+						<li> Laatste update: <?php echo strftime("%a, %d-%b-%Y (%H:%M)", $lastupdate); ?> </li>
 <?php
 	if ($settings['show_updatebutton']) {
 ?>
-				<div class="filter shadow">
-					<h4>Update</h4>
-					<ul class="filterlist updatebox">
-						<li> <a href="retrieve.php?output=xml" id="updatespotsbtn">Update Spots <img id="updatespotimg" src="images/gobutton.png"></img></a></li>
-					</ul>
-                </div>
+						<li> <a href="retrieve.php?output=xml" id="updatespotsbtn" class="updatespotsbtn">Update Spots <img id="updatespotimg" src="images/gobutton.png"></img></a></li>
 <?php
 	}
 ?>
+						<li> <a href="?page=erasedls" id="removedllistbtn" class="erasedlsbtn">Remove history of downloads <img id="erasedlsimg" src="images/gobutton.png"></img></a></li>
+					</ul>
+                </div>
+
 			</div>

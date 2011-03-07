@@ -5,10 +5,14 @@
 class SpotTemplateHelper {	
 	protected $_settings;
 	protected $_prefs;
+	protected $_db;
+	protected $_params;
 	
-	function __construct($settings, $prefs) {
+	function __construct($settings, $prefs, $db, $params) {
 		$this->_settings = $settings;
 		$this->_prefs = $prefs;
+		$this->_db = $db;
+		$this->_params = $params;
 	} # ctor
 	
 	/*
@@ -37,7 +41,7 @@ class SpotTemplateHelper {
 		# fix de category
 		$spot['category'] = (int) $spot['category'];
 		
-		# find een geschikte category
+		# vind een geschikte category
 		$category = $this->_settings['sabnzbd']['categories'][$spot['category']]['default'];
 
 		foreach($spot['subcatlist'] as $cat) {
@@ -82,5 +86,42 @@ class SpotTemplateHelper {
 		
 		return $tmp;
 	} # formatDescription
+	
+	function hasbeenDownloaded($spot) {
+		# We gebruiken een static list en een array search omdat dit waarschijnlijk
+		# sneller is dan 100 tot 1000 queries per pagina in het overzichtsscherm.
+		static $dlList = null;
+		static $dlListCnt = 0;
+		
+		if ($dlList == null) {
+			$dlList = $this->_db->getDownloads();
+			$dlListCnt = count($dlList);
+		} # if
+		
+		for($i = 0; $i < $dlListCnt; $i++) {
+			if ($dlList[$i]['messageid'] == $spot['messageid']) {
+				return true;
+			} # if
+		} # for
+		
+		return false;
+	} # hasbeenDownloaded
+	
+	function getFilterParams($dontInclude = array()) {
+		$getUrl = '';
+		
+		if (!is_array($dontInclude)) {
+			$dontInclude = array($dontInclude);
+		} # if
+		
+		foreach($this->_params['activefilter'] as $key => $val) {
+			if (array_search($key, $dontInclude) === false) {
+				$getUrl .= '&amp;search[' .  $key . ']=' . urlencode($val);
+			}
+		} # foreach
+		
+		return $getUrl;
+	} # getFilterParams
+	
 	
 } # class SpotTemplateHelper

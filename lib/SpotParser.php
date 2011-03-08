@@ -2,6 +2,7 @@
 require_once "Math/BigInteger.php";
 require_once "Crypt/RSA.php";
 require_once "settings.php";
+require_once "lib/exceptions/ParseSpotXmlException.php";
 
 class SpotParser {
 	private $_xmlarray = array();
@@ -45,6 +46,11 @@ class SpotParser {
 		} # if error parsing
 		
 		xml_parser_free($xml_parser);
+		
+		# als de xml parser een error heeft gegeven, geef false terug
+		if ($this->_xmlarray === false) {
+			throw new ParseSpotXmlException();
+		} # if
 
 		# fix the category in the XML array but only for new spots
 		if ($this->_xmlarray['key-id'] != 1) {
@@ -61,10 +67,15 @@ class SpotParser {
 		# Bij oude-style (?) spots wordt er al een gesplitste array van subcategorieen aangeleverd
 		# die uiteraard niet compatible is met de nieuwe style van subcategorieen
 		#
+		$subcatList = array();
 		if ((!empty($this->_xmlarray['subcat'])) && (is_array($this->_xmlarray['subcat']))) {
 			$subcatList = $this->_xmlarray['subcat'];
 		} else {
-			$subcatList = $this->_xmlarray['sub'];
+			if (!is_array($this->_xmlarray['sub'])) {
+				$subcatList = array($this->_xmlarray['sub']);
+			} else {
+				$subcatList = $this->_xmlarray['sub'];
+			} # if
 		} # if
 
 		# match hoofdcat/subcat-type/subcatvalue

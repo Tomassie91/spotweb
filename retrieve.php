@@ -2,6 +2,7 @@
 error_reporting(E_ALL & ~8192 & ~E_USER_WARNING);	# 8192 == E_DEPRECATED maar PHP < 5.3 heeft die niet
 
 require_once "settings.php";
+require_once "lib/exceptions/ParseSpotXmlException.php";
 require_once "lib/SpotDb.php";
 require_once "lib/SpotReq.php";
 require_once "lib/SpotParser.php";
@@ -48,7 +49,8 @@ try {
 	$retriever = new SpotRetriever_Spots($settings['nntp_hdr'], 
 										 $db, 
 										 $settings['rsa_keys'], 
-										 $req->getDef('output', ''));
+										 $req->getDef('output', ''),
+										 $settings['retrieve_full']);
 	$msgdata = $retriever->connect($settings['hdr_group']);
 	$retriever->displayStatus('dbcount', $db->getSpotCount());
 	$retriever->loopTillEnd($curMsg, $settings['retrieve_increment']);

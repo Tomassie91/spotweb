@@ -24,8 +24,10 @@ class SpotPage_getnzb extends SpotPage_Abs {
 		} # else
 	
 		# Haal de spot op en gebruik de informatie daarin om de NZB file op te halen
-		$fullSpot = $hdr_spotnntp->getFullSpot($this->_messageid);
-		$nzb = $nzb_spotnntp->getNzb($fullSpot['segment']);
+		# Haal de volledige spotinhoud op
+		$spotsOverview = new SpotsOverview($this->_db);
+		$fullSpot = $spotsOverview->getFullSpot($this->_messageid, $hdr_spotnntp);
+		$nzb = $spotsOverview->getNzb($fullSpot['segment'], $nzb_spotnntp);
 		
 		# afhankelijk van de NZB actie die er gekozen is schrijven we het op het filesysteem
 		# weg, of geven we de inhoud van de nzb gewoon terug
@@ -41,7 +43,7 @@ class SpotPage_getnzb extends SpotPage_Abs {
 			if (!empty($settings['nzb_local_queue_command'])){ }
 				$saveOutput = array();
                 $status = 0;
-				$cmdToRun = str_replace(array('$SPOTTITLE'), array($fullSpot['title'], $settings['nzb_local_queue_command']));
+				$cmdToRun = str_replace(array('$SPOTTITLE'), array($fullSpot['title']), $settings['nzb_local_queue_command']);
 				
                 exec($cmdToRun, $saveOutput, $status);
 				

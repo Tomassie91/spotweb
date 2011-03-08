@@ -43,7 +43,10 @@ else
 #-------------------
 # converting the SimpleXML Object to an array
 #-------------------
-$settings = simplexml2array($settingsobject);
+if(isset($settingsobject))
+	$settings = simplexml2array($settingsobject);
+else
+	$settings = array();
 
 #-------------------
 #defining the version
@@ -164,7 +167,7 @@ $settings['sabnzbd']['categories'] = Array(
 #-----------------
 # Override NNTP header/comments settings, als er geen aparte NNTP header/comments server is opgegeven, gebruik die van de NZB server
 #-----------------
-if (empty($settings['nntp_hdr']['host'])) {
+if (isset($settings['nntp_hdr']) && empty($settings['nntp_hdr']['host'])) {
 	$settings['nntp_hdr'] = $settings['nntp_nzb'];
 }
 

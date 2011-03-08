@@ -1,33 +1,26 @@
 <?php
 error_reporting(E_ALL & ~8192 & ~E_USER_WARNING);	# 8192 == E_DEPRECATED maar PHP < 5.3 heeft die niet
 
-
-#settings
 require_once "settings.php";
-$settings = $GLOBALS['settings'];
-
-#install script
-if(!isset($GLOBALS['settings']['is_installed']) || $GLOBALS['settings']['is_installed'] == false){
-	require_once('lib/page/SpotPage_install.php');
-	$page = new SpotPage_install();
-	$page->render();
-	exit;
-}
-
 require_once "lib/SpotDb.php";
 require_once "lib/SpotReq.php";
 require_once "lib/SpotParser.php";
 require_once "lib/SpotsOverview.php";
 require_once "lib/SpotCategories.php";
-require_once "lib/SpotNntp.php";
-require_once "lib/page/SpotPage_index.php";
-require_once "lib/page/SpotPage_getnzb.php";
-require_once "lib/page/SpotPage_getspot.php";
-require_once "lib/page/SpotPage_catsjson.php";
-require_once "lib/page/SpotPage_erasedls.php";
 
 #- main() -#
 try {
+	#install script
+	if(!isset($settings['is_installed']) || $settings['is_installed'] == false){
+        	require_once('lib/page/SpotPage_install.php');
+	        $page = new SpotPage_install();
+        	$page->render();
+	        exit;
+	}
+
+	//NNTP include is needed for system check
+	require_once "lib/SpotNntp.php";
+
 	# database object
 	$db = new SpotDb($settings['db']);
 	$db->connect();
@@ -37,9 +30,11 @@ try {
 	$req->initialize();
 
 	$page = $req->getDef('page', 'index');
-	if (array_search($page, array('index', 'catsjson', 'getnzb', 'getspot', 'erasedls')) === false) {
+	if (array_search($page, array('index', 'catsjson', 'getnzb', 'getspot', 'erasedls', 'settings')) === false) {
 		$page = 'index';
 	} # if
+
+	$req->getPageRequire($page);
 
 	switch($page) {
 
@@ -60,6 +55,11 @@ try {
 				$page->render();
 				break;
 		} # erasedls
+                case 'settings' : {
+                                $page = new SpotPage_settings($db, $settings, $settings['prefs']);
+                                $page->render();
+                                break;
+                }
 		
 		case 'catsjson' : {
 				$page = new SpotPage_catsjson($db, $settings, $settings['prefs']);
@@ -77,7 +77,7 @@ try {
 				$page->render();
 				break;
 		} # getspot
-	} # switch
+	} #page switch
 }
 catch(Exception $x) {
 	die($x->getMessage());

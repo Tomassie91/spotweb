@@ -1,7 +1,7 @@
 <?php
 require_once('ReadableSimpleXML.php');
 
-class SettingsGenerator {
+class SpotSettings {
 
         public function __construct() {
 
@@ -18,7 +18,11 @@ class SettingsGenerator {
 		
 	}
 
-	public function saveSettings($simplexmlobject) {
+	public function updateXML($post) {
+		$this->createXML($post);
+	}
+
+	private function saveSettings($simplexmlobject) {
 		$xml = $simplexmlobject->asPrettyXML();
 
 		file_put_contents('settings.xml',$xml);
@@ -37,6 +41,21 @@ class SettingsGenerator {
                 || $post['NNTP_enc'] == ''
 		) {
 			throw new Exception('no valid NNTP server given');
+		}
+
+		if(isset($post['use_header_NNTP'])) {
+			if(!isset($post['NNTP_header_host'])
+        	        || !isset($post['NNTP_header_username'])
+        	        || !isset($post['NNTP_header_password'])
+        	        || !isset($post['NNTP_header_port'])
+        	        || !isset($post['NNTP_header_enc'])
+       		        || $post['NNTP_header_username'] == ''
+	                || $post['NNTP_header_password'] == ''
+	                || $post['NNTP_header_port'] == ''
+        	        || $post['NNTP_header_enc'] == ''
+	               	) {
+        	                throw new Exception('no valid NNTP header server given');
+	                }
 		}
 
 		if(!isset($post['DB_type']))
@@ -76,6 +95,7 @@ class SettingsGenerator {
 			) {
 				throw new Exception('no valid SABnzbd+ API information supplied');
 			}
+
 		} elseif($post['sab_type'] == 'blackhole'){
 			if(!isset($post['sab_blackhole']) || $post['sab_host'] == '')
 				throw new Exception('no valid SABnzbd+ blackhole location supplied');
@@ -110,6 +130,14 @@ class SettingsGenerator {
                 $nntp->addChild('enc', $post['NNTP_enc']);
                 $nntp->addChild('port', $post['NNTP_port']);
 
+		$NNTP_header = $root->addChild('nntp_hdr');
+                $NNTP_header->addChild('host', $post['NNTP_header_host']);
+                $NNTP_header->addChild('user', $post['NNTP_header_username']);
+                $NNTP_header->addChild('pass', $post['NNTP_header_password']);
+                $NNTP_header->addChild('enc', $post['NNTP_header_enc']);
+                $NNTP_header->addChild('port', $post['NNTP_header_port']);
+
+
 		$db = $root->addChild('db');
 		$db->addChild('engine', $post['DB_type']);
 
@@ -121,6 +149,10 @@ class SettingsGenerator {
                         $db->addChild('user', $post['mysql_username']);
                         $db->addChild('pass', $post['mysql_password']);
 		}
+
+		//checks if the spotweb url ends with a slash, preventing add errors
+                if(substr($post['spotweb_url'], -1) != '/')
+                	$post['spotweb_url'] .= '/';
 
                 if($post['sab_type'] == 'api'){
 	                $sab = $root->addChild('sabnzbd', '');

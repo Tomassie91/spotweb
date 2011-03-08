@@ -19,10 +19,10 @@ class SpotPage_install extends SpotPage_Abs {
 		if(!isset($_GET['progress']))
 			$this->template('install_check');
 		elseif($_GET['progress'] == 'fill_settings')
-			$this->template('install_filler');
+			$this->template('settings');
 		elseif($_GET['progress'] == 'done') {
-			require_once('lib/SettingsGenerator.php');
-			$settingsgen = new SettingsGenerator();
+			require_once('lib/SpotSettings.php');
+			$settingsgen = new SpotSettings();
 			$exmessage = '';
 			try {
 				$settingsgen->createXML($_POST);
@@ -36,4 +36,4 @@ class SpotPage_install extends SpotPage_Abs {
 		$this->template('footer');
 	} # render()
 	
-} # class SpotPage_index
+} # class SpotPage_install

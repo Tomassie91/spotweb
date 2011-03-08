@@ -67,6 +67,7 @@
 <?php
 	}
 ?>
+						 <li> <a href="?page=settings" id="gotosettingsbtn" class="gotosettingsbtn">Settings<img id="settingsimg" src="images/gobutton.png"></img></a></li>
 						<li> <a href="?page=erasedls" id="removedllistbtn" class="erasedlsbtn">Remove history of downloads <img id="erasedlsimg" src="images/gobutton.png"></img></a></li>
 					</ul>
                 </div>

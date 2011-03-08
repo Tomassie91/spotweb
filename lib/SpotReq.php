@@ -58,4 +58,13 @@ class SpotReq {
 			} # switch
 		} #else
     }
+
+    function getPageRequire($page) {
+	$requirestring = 'lib/page/SpotPage_' . $page . '.php';
+
+	if(file_exists($requirestring))
+		require_once($requirestring);
+	else
+		throw new Exception('Page file could not be found!');
+    }
 }

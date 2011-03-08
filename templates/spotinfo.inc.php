@@ -80,7 +80,7 @@
 <?php					
 	if ((!empty($spot['sabnzbdurl'])) && (!empty($spot['segment']))) {
 ?>
-					<tr> <th> SABnzbd </th? <td> <a href='<?php echo $spot['sabnzbdurl']; ?>' target='_blank'><?php echo htmlentities($spot['title']); ?></a> </td> </tr>
+					<tr> <th> SABnzbd </th? <td> <a href='<?php echo $spot['sabnzbdurl']; ?>' target='_blank'><?php echo utf8_encode($spot['title']); ?></a> </td> </tr>
 <?php
 	} # if
 ?>

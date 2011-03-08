@@ -59,17 +59,21 @@
 				<div class="filter shadow">
 					<h4>Maintenance</h4>
 					<ul class="filterlist maintenancebox">
-						<li> Laatste update: <?php echo strftime("%a, %d-%b-%Y (%H:%M)", $lastupdate); ?> </li>
-<?php
-	if ($settings['show_updatebutton']) {
-?>
-						<li> <a href="retrieve.php?output=xml" id="updatespotsbtn" class="updatespotsbtn">Update Spots <img id="updatespotimg" src="images/gobutton.png"></img></a></li>
-<?php
-	}
-?>
+						 <li id="lastupdate"
+						<?php
+
+						$secondsfromlastupdate = time() - $lastupdate;
+						if($secondsfromlastupdate > (60 * 60 * 24)) { echo 'class="notuptodate"';}
+						?> 
+						> Laatste update: <?php echo strftime("%a, %d-%b-%Y (%H:%M)", $lastupdate); ?> </li>
+						<?php if ($settings['show_updatebutton']) { ?>
+							<li> <a href="retrieve.php?output=xml" id="updatespotsbtn" class="updatespotsbtn">Update Spots <img id="updatespotimg" src="images/gobutton.png"></img></a></li>
+						<?php
+						}
+						?>
 						 <li> <a href="?page=settings" id="gotosettingsbtn" class="gotosettingsbtn">Settings<img id="settingsimg" src="images/gobutton.png"></img></a></li>
 						<li> <a href="?page=erasedls" id="removedllistbtn" class="erasedlsbtn">Remove history of downloads <img id="erasedlsimg" src="images/gobutton.png"></img></a></li>
 					</ul>
                 </div>
 
-			</div>
+	</div>
